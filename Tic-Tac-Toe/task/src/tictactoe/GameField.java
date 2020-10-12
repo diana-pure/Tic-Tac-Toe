@@ -19,6 +19,7 @@ public class GameField {
     }
 
     public GameState getSate() {
+        stat.count();
         if (Math.abs(stat.xSignCount - stat.oSignCount) > 1) {
             return GameState.IMPOSSIBLE;
         }
@@ -65,24 +66,30 @@ public class GameField {
         if (field[i][j] != EMPTY_SIGN) {
             throw new WrongMoveException(OCCUPIED_CELL_MESSAGE);
         }
-        field[i][j] = X_SIGN;
+        field[i][j] = move.getSign();
     }
 
     enum GameState {
-        NOT_FINISHED("Game not finished"),
-        DRAW("Draw"),
-        X_WINS("X wins"),
-        O_WINS("O wins"),
-        IMPOSSIBLE("Impossible");
+        NOT_FINISHED("Game not finished", false),
+        DRAW("Draw", true),
+        X_WINS("X wins", true),
+        O_WINS("O wins", true),
+        IMPOSSIBLE("Impossible", true);
 
         private final String message;
+        private final boolean isTerminal;
 
-        GameState(String msg) {
+        GameState(String msg, boolean isTerminal) {
             message = msg;
+            this.isTerminal = isTerminal;
         }
 
         public String getMessage() {
             return message;
+        }
+
+        public boolean isTerminal() {
+            return isTerminal;
         }
     }
 
@@ -94,22 +101,37 @@ public class GameField {
         private int oRowCount;
 
         public GameFieldStat() {
+            count();
+        }
+
+        private void count() {
+            resetCounters();
             countFieldProperties();
             countSignsInARow();
+        }
+
+        private void resetCounters() {
+            xSignCount = 0;
+            oSignCount = 0;
+            emptySignCount = 0;
+            xRowCount = 0;
+            oRowCount = 0;
         }
 
         private void countFieldProperties() {
             for (int i = 0; i < FIELD_SIZE; i++) {
                 for (int j = 0; j < FIELD_SIZE; j++) {
-                    if (field[i][j] == X_SIGN) {
-                        xSignCount++;
-                        continue;
+                    switch (field[i][j]) {
+                        case X_SIGN:
+                            xSignCount++;
+                            break;
+                        case O_SIGN:
+                            oSignCount++;
+                            break;
+                        default:
+                            emptySignCount++;
+                            break;
                     }
-                    if (field[i][j] == O_SIGN) {
-                        oSignCount++;
-                        continue;
-                    }
-                    emptySignCount++;
                 }
             }
         }

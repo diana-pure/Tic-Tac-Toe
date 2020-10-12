@@ -3,23 +3,30 @@ package tictactoe;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-
 public class Main {
-    private static final String CELLS_REQUEST_MESSAGE = "Enter cells: ";
     private static final String COORDS_REQUEST_MESSAGE = "Enter the coordinates: ";
     private static final String NUMBERS_REQUEST_MESSAGE = "You should enter numbers!";
     private static final String RANGE_NUMBERS_REQUEST_MESSAGE = "Coordinates should be from 1 to 3!";
+    private static final String INIT_FIELD_STRING = "_________";
+    private static final char X_SIGN = 'X';
+    private static final char O_SIGN = 'O';
+    private static int countOfMoves = 1;
+
     private static final Scanner s = new Scanner(System.in);
 
     public static void main(String[] args) {
-        System.out.print(CELLS_REQUEST_MESSAGE);
-        String input = s.nextLine();
-        GameField field = GameField.fromString(input);
+
+        GameField field = GameField.fromString(INIT_FIELD_STRING);
         System.out.println(field.toString());
-//        System.out.println(field.getSate().getMessage());
-        Move move = getMove();
-        applyMove(field, move);
-        System.out.println(field.toString());
+        do {
+            applyMove(field, getMove(getSign()));
+            System.out.println(field.toString());
+        } while (!field.getSate().isTerminal());
+        System.out.println(field.getSate().getMessage());
+    }
+
+    private static char getSign() {
+        return countOfMoves % 2 == 1 ? X_SIGN : O_SIGN;
     }
 
     private static void applyMove(GameField field, Move move) {
@@ -30,12 +37,13 @@ public class Main {
                 break;
             } catch (WrongMoveException e) {
                 System.out.println(e.getMessage());
-                m = getMove();
+                m = getMove(getSign());
             }
         } while (true);
+        countOfMoves++;
     }
 
-    private static Move getMove() {
+    private static Move getMove(char sign) {
         int coord1;
         int coord2;
         do {
@@ -62,6 +70,6 @@ public class Main {
             }
         } while (true);
 
-        return new Move(coord1, coord2);
+        return new Move(sign, coord1, coord2);
     }
 }
