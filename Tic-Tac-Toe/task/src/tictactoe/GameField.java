@@ -1,9 +1,11 @@
 package tictactoe;
 
 public class GameField {
-    private final static int FIELD_SIZE = 3;
-    private final static char X_SIGN = 'X';
-    private final static char O_SIGN = 'O';
+    private static final int FIELD_SIZE = 3;
+    private static final char X_SIGN = 'X';
+    private static final char O_SIGN = 'O';
+    private static final char EMPTY_SIGN = '_';
+    private static final String OCCUPIED_CELL_MESSAGE = "This cell is occupied! Choose another one!";
     private final char[][] field;
     private final GameFieldStat stat;
 
@@ -55,6 +57,15 @@ public class GameField {
         }
         sb.append("---------");
         return sb.toString();
+    }
+
+    public void applyMove(Move move) throws WrongMoveException {
+        int i = FIELD_SIZE - move.getCoord2();
+        int j = move.getCoord1() - 1;
+        if (field[i][j] != EMPTY_SIGN) {
+            throw new WrongMoveException(OCCUPIED_CELL_MESSAGE);
+        }
+        field[i][j] = X_SIGN;
     }
 
     enum GameState {

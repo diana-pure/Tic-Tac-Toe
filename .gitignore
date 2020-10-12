@@ -1,0 +1,11 @@
+# Project exclude paths
+/.gradle/
+/Problems/Check sudoku/out/
+/Problems/Check sudoku/out/production/classes/
+/Problems/Pretty looking pattern/out/
+/Problems/Pretty looking pattern/out/production/classes/
+/Problems/The star figure/out/
+/Problems/The star figure/out/production/classes/
+/Tic-Tac-Toe/task/build/
+/Tic-Tac-Toe/task/out/
+/Tic-Tac-Toe/task/out/production/classes/
